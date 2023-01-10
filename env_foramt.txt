@@ -1,0 +1,12 @@
+MQTT_AUTH='user_pass'                       #user_pass mean add user_name_password                    
+MQTT_USER = "admin"                         #mqtt user_name
+MQTT_PASS = "public"                        #mqtt password   
+MQTT_CONNECTION_TYPE = "tcp"                #tcp,websockets (tcp over mqtt) 
+MQTT_HOST = "dc03hub.saint-gobain.com"      #mqtt_host            
+MQTT_PORT = 8883                            #mqtt_port
+MQTT_KEEPALIVE = 60                         #mqtt_keep alive                   
+MQTT_TLS = 1                                #mqtt_tls enable or not
+MQTT_CA_CERT_PATH = 'ca_3.pem'              #mqtt ca certificate path
+MQTT_TLS_VERIFY_DISABLE = 1                 #Mqtt tls verify disable or enable?                         
+MQTT_WS_PATH=""                             #websocket ws path
+CLIENT_ID="_MQTT_Bridge"                    #mqtt or ws client id                
