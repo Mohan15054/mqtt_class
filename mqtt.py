@@ -1,6 +1,4 @@
 # python 3.8
-
-import random
 import time
 from paho.mqtt import client as mqtt_client
 import os
@@ -22,7 +20,6 @@ ca_cert_path = os.getenv("MQTT_CA_CERT_PATH")
 insecure_tls = str2bool(os.getenv("MQTT_TLS_VERIFY_DISABLE"))
 ws_path = os.getenv("MQTT_WS_PATH")
 client_id = os.getenv("CLIENT_ID")
-print("connection_type",connection_type)
 
 
 class mqtt():
@@ -32,17 +29,20 @@ class mqtt():
                 print("Connected to MQTT Broker!")
             else:
                 print("Failed to connect, return code %d\n", rc)
-        print(connection_type)
         client = mqtt_client.Client(client_id,clean_session=True, userdata=None, protocol=mqtt_client.MQTTv311,transport=connection_type)
-        client.ws_set_options(path='/'+ws_path)
+        if connection_type == 'websockets':
+            client.ws_set_options(path='/'+ws_path)
+        if tls_status == True:
+            if ca_cert_path != '':
+                client.tls_set(ca_certs=ca_cert_path)
+                client.tls_insecure_set(insecure_tls)
+            else:
+                client.tls_set()
+                client.tls_insecure_set(insecure_tls)
         if auth == "user_pass":
             client.username_pw_set(username, password)
         client.on_connect = on_connect
         print(tls_status,"tls_status")
-        if tls_status == True:
-            print("inside_tls_loop")
-            client.tls_set(ca_certs=ca_cert_path)
-            client.tls_insecure_set(insecure_tls)
         client.connect(broker, port,keepalive=keep_alive)
         client.loop_start()
         return client
@@ -54,13 +54,3 @@ class mqtt():
             print(f"Send `{msg}` to topic `{topic1}`")
         else:
             print(f"Failed to send message to topic {topic1}")
-        #msg_count += 1
-
-
-if __name__ == '__main__':
-    topic = "iiot/mqtt"
-    msg=0
-    client = mqtt.connect_mqtt()
-    while True:
-        mqtt.publish(client,topic,msg)
-        time.sleep(2)
